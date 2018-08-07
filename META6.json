@@ -1,0 +1,16 @@
+{
+    "meta-version" : "1",
+    "perl"         : "6.c",
+    "name"         : "Geo::Coordinates::Ellipsoid",
+    "version"      : "0.0.1",
+    "description"  : "Details of ellipsoids",
+    "authors"      : [
+                       "Kevin Pye (kjpye@cpan.org)",
+                     ],
+    "depends"      : [],
+    "provides"     : {
+                       "Geo::Coordinates::Ellipsoid" : "lib/Geo/Coordinates/Ellipsoid.pm"
+                     },
+    "license"      : "Artistic-2.0",
+    "source-url"   : "https://github.com/kjpye/P6-Geo-Coordinates-Ellipsoid"
+}
