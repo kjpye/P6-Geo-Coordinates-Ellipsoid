@@ -99,7 +99,7 @@ module Geo::Coordinates::Ellipsoid {
   #             my($name, $r, $sqecc) = ellipsoid-info 22;
 
   sub ellipsoid-info(Str $id) is export {
-     %Ellipsoid{$id} // %Ellipsoid{cleanup-name $id};
+     %Ellipsoid{$id} // %Ellipsoid{cleanup-name $id} // (Ellipsoid);
   }
 
 # Do we want this here"
