@@ -1,6 +1,6 @@
 use v6;
 
-# Based on Geo::Coordinates::Ellipsoid.
+# Based on Geo::Coordinates::UTM.
 
 module Geo::Coordinates::Ellipsoid {
 
@@ -24,7 +24,16 @@ module Geo::Coordinates::Ellipsoid {
     has $.radius;
     has $.eccentricity;
 
-    method create($name, $radius, $eccentricity) {
+    multi method create($name, $radius, $eccentricity) {
+      Ellipsoid.new(name => $name, radius => $radius.Num, eccentricity => $eccentricity.Num);
+    }
+
+    multi method create($name, $radius, :$eccentricity) {
+      Ellipsoid.new(name => $name, radius => $radius.Num, eccentricity => $eccentricity.Num);
+    }
+
+    multi method create($name, $radius, :$flattening) {
+      my $eccentricity = 1.0/$flattening * ( 2.0 - 1.0/$flattening);
       Ellipsoid.new(name => $name, radius => $radius.Num, eccentricity => $eccentricity.Num);
     }
   }
@@ -34,38 +43,39 @@ module Geo::Coordinates::Ellipsoid {
    
   BEGIN {  # Initialize this before other modules get a chance
     @Ellipsoid = (
-      Ellipsoid.create("Airy",                                6377563,     0.006670540),
-      Ellipsoid.create("Australian National",                 6378160,     0.006694542),
-      Ellipsoid.create("Bessel 1841",                         6377397,     0.006674372),
-      Ellipsoid.create("Bessel 1841 Nambia",                  6377484,     0.006674372),
-      Ellipsoid.create("Clarke 1866",                         6378206,     0.006768658),
-      Ellipsoid.create("Clarke 1880",                         6378249,     0.006803511),
-      Ellipsoid.create("Everest 1830 India",                  6377276,     0.006637847),
-      Ellipsoid.create("Fischer 1960 Mercury",                6378166,     0.006693422),
-      Ellipsoid.create("Fischer 1968",                        6378150,     0.006693422),
-      Ellipsoid.create("GRS 1967",                            6378160,     0.006694605),
-      Ellipsoid.create("GRS 1980",                            6378137,     0.006694380),
-      Ellipsoid.create("Helmert 1906",                        6378200,     0.006693422),
-      Ellipsoid.create("Hough",                               6378270,     0.006722670),
-      Ellipsoid.create("International",                       6378388,     0.006722670),
-      Ellipsoid.create("Krassovsky",                          6378245,     0.006693422),
-      Ellipsoid.create("Modified Airy",                       6377340,     0.006670540),
-      Ellipsoid.create("Modified Everest",                    6377304,     0.006637847),
-      Ellipsoid.create("Modified Fischer 1960",               6378155,     0.006693422),
-      Ellipsoid.create("South American 1969",                 6378160,     0.006694542),
-      Ellipsoid.create("WGS 60",                              6378165,     0.006693422),
-      Ellipsoid.create("WGS 66",                              6378145,     0.006694542),
-      Ellipsoid.create("WGS-72",                              6378135,     0.006694318),
-      Ellipsoid.create("WGS-84",                              6378137,     0.00669438 ),
-      Ellipsoid.create("Everest 1830 Malaysia",               6377299,     0.006637847),
-      Ellipsoid.create("Everest 1956 India",                  6377301,     0.006637847),
-      Ellipsoid.create("Everest 1964 Malaysia and Singapore", 6377304,     0.006637847),
-      Ellipsoid.create("Everest 1969 Malaysia",               6377296,     0.006637847),
-      Ellipsoid.create("Everest Pakistan",                    6377296,     0.006637534),
-      Ellipsoid.create("Indonesian 1974",                     6378160,     0.006694609),
-      Ellipsoid.create("Arc 1950",                            6378249.145, 0.006803481),
-      Ellipsoid.create("NAD 27",                              6378206.4,   0.006768658),
-      Ellipsoid.create("NAD 83",                              6378137,     0.006694384),
+      Ellipsoid.create("Airy",                                6377563,                     0.006670540),
+      Ellipsoid.create("Australian National",                 6378160,                     0.006694542),
+      Ellipsoid.create("Bessel 1841",                         6377397,                     0.006674372),
+      Ellipsoid.create("Bessel 1841 Nambia",                  6377484,                     0.006674372),
+      Ellipsoid.create("Clarke 1866",                         6378206,                     0.006768658),
+      Ellipsoid.create("Clarke 1880",                         6378249,                     0.006803511),
+      Ellipsoid.create("Everest 1830 India",                  6377276,                     0.006637847),
+      Ellipsoid.create("Fischer 1960 Mercury",                6378166,                     0.006693422),
+      Ellipsoid.create("Fischer 1968",                        6378150,                     0.006693422),
+      Ellipsoid.create("GRS 1967",                            6378160,                     0.006694605),
+      Ellipsoid.create("GRS 1980",                            6378137,                     0.006694380),
+      Ellipsoid.create("Helmert 1906",                        6378200,                     0.006693422),
+      Ellipsoid.create("Hough",                               6378270,                     0.006722670),
+      Ellipsoid.create("International",                       6378388,                     0.006722670),
+      Ellipsoid.create("Krassovsky",                          6378245,                     0.006693422),
+      Ellipsoid.create("Modified Airy",                       6377340,                     0.006670540),
+      Ellipsoid.create("Modified Everest",                    6377304,                     0.006637847),
+      Ellipsoid.create("Modified Fischer 1960",               6378155,                     0.006693422),
+      Ellipsoid.create('Plessus',                             6376523,     flattening => 308.64),
+      Ellipsoid.create("South American 1969",                 6378160,                     0.006694542),
+      Ellipsoid.create("WGS 60",                              6378165,                     0.006693422),
+      Ellipsoid.create("WGS 66",                              6378145,                     0.006694542),
+      Ellipsoid.create("WGS-72",                              6378135,                     0.006694318),
+      Ellipsoid.create("WGS-84",                              6378137,                     0.00669438 ),
+      Ellipsoid.create("Everest 1830 Malaysia",               6377299,                     0.006637847),
+      Ellipsoid.create("Everest 1956 India",                  6377301,                     0.006637847),
+      Ellipsoid.create("Everest 1964 Malaysia and Singapore", 6377304,                     0.006637847),
+      Ellipsoid.create("Everest 1969 Malaysia",               6377296,                     0.006637847),
+      Ellipsoid.create("Everest Pakistan",                    6377296,                     0.006637534),
+      Ellipsoid.create("Indonesian 1974",                     6378160,                     0.006694609),
+      Ellipsoid.create("Arc 1950",                            6378249.145,                 0.006803481),
+      Ellipsoid.create("NAD 27",                              6378206.4,                   0.006768658),
+      Ellipsoid.create("NAD 83",                              6378137,                     0.006694384),
     );
 
   # calc ecc  as  
@@ -102,20 +112,8 @@ module Geo::Coordinates::Ellipsoid {
      %Ellipsoid{$id} // %Ellipsoid{cleanup-name $id} // (Ellipsoid);
   }
 
-# Do we want this here"
-  proto sub set-ellipse(|) is export { * }
+dd @Ellipsoid;
 
-  multi sub set-ellipse(Str $name) {
-    my $el = ellipsoid-info($name);
-    fail "Unknown ellipsoid $name" unless $el.defined;
-    $eccentricity = $el.eccentricity;
-    $radius       = $el.radius;
-  }
-
-  multi sub set-ellipse($new-radius, $new-eccentricity) {
-    $radius = $new-radius;
-    $eccentricity = $new-eccentricity;
-  }
 } # end module
 
 =begin pod
